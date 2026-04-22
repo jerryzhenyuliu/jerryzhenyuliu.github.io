@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="/2026/04/22/hello-world/"/>
+    <url>/2026/04/22/hello-world/</url>
+    
+    <content type="html"><![CDATA[<p>This is the first post on what I hope will become a long-running notebook.</p><p>I’m a high school student who spends a lot of time coding and reading about<br>algorithms, maths, and machine learning. Most of what I learn lives in<br>half-finished Jupyter notebooks and Markdown files on my laptop — this<br>blog is an attempt to tidy some of it up, write it out properly, and share it.</p><h2 id="What-I-plan-to-post"><a href="#What-I-plan-to-post" class="headerlink" title="What I plan to post"></a>What I plan to post</h2><ul><li><strong>Project write-ups</strong> — when I finish something worth writing up<br>(a sorting-algorithm benchmark, a neural network from scratch,<br>a numerical-methods comparison), I’ll turn it into a post here.</li><li><strong>Short notes</strong> — things I found interesting while reading a paper<br>or watching a lecture. Not polished articles, just “here’s what<br>clicked for me”.</li><li><strong>Build diaries</strong> — occasional longer posts when I take on a bigger<br>project and want to record what I tried and what failed.</li></ul><h2 id="Currently-working-on"><a href="#Currently-working-on" class="headerlink" title="Currently working on"></a>Currently working on</h2><p>Three projects, all in pure Python, all landing on GitHub this week:</p><ol><li><p><a href="https://github.com/jerryzhenyuliu/sorting-algorithms">Sorting algorithms</a><br>— six classical sorts, experiments on six different input distributions.<br>I also tried designing a median-of-5 pivot variant for quicksort;<br>it saves ~18% of comparisons on random input.</p></li><li><p><a href="https://github.com/jerryzhenyuliu/computational-math">Computational math</a><br>— Monte Carlo estimation of pi and e, the Prime Number Theorem,<br>Goldbach’s conjecture, and three methods for solving equations<br>numerically. The most surprising thing I learned: the secant<br>method’s convergence order is the golden ratio.</p></li><li><p><a href="https://github.com/jerryzhenyuliu/neural-networks-from-scratch">Neural networks from scratch</a><br>— building up from a single neuron to a multi-layer network.<br>No NumPy, no PyTorch. Every derivative by hand, every gradient<br>verified with finite differences.</p></li></ol><p>Write-ups of each will land on this blog over the coming weeks.</p><h2 id="Why-blog-at-all"><a href="#Why-blog-at-all" class="headerlink" title="Why blog at all"></a>Why blog at all</h2><p>Two reasons. First, writing forces me to notice when I don’t actually<br>understand something — I can fool myself in my head but not on paper.<br>Second, almost every good resource I’ve found online was written by<br>someone who wasn’t famous or formally trained, just curious and willing<br>to put their notes up. That’s the kind of resource I’d like to<br>contribute to eventually.</p><p>More to come.</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>notes</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>meta</tag>
+      
+      <tag>introduction</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
