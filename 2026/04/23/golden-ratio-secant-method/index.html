@@ -19,23 +19,26 @@
   <meta name="author" content="Jerry Liu">
   <meta name="keywords" content="jerry liu, cs, algorithms, neural networks, high school">
   
-    <meta name="description" content="This is the first post on what I hope will become a long-running notebook. I’m a high school student who spends a lot of time coding and reading aboutalgorithms, maths, and machine learning. Most of w">
+    <meta name="description" content="I was working through a numerical-methods experiment comparing threeways to solve $f(x) &#x3D; 0$: bisection, Newton’s method, and the secantmethod. I expected the textbook story — bisection is slow,">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://jerryzhenyuliu.github.io/2026/04/22/hello-world/index.html">
+<meta property="og:title" content="Why does the secant method converge at the golden ratio?">
+<meta property="og:url" content="https://jerryzhenyuliu.github.io/2026/04/23/golden-ratio-secant-method/index.html">
 <meta property="og:site_name" content="Jerry Liu">
-<meta property="og:description" content="This is the first post on what I hope will become a long-running notebook. I’m a high school student who spends a lot of time coding and reading aboutalgorithms, maths, and machine learning. Most of w">
+<meta property="og:description" content="I was working through a numerical-methods experiment comparing threeways to solve $f(x) &#x3D; 0$: bisection, Newton’s method, and the secantmethod. I expected the textbook story — bisection is slow,">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-04-22T12:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-22T09:17:56.000Z">
+<meta property="og:image" content="https://jerryzhenyuliu.github.io/img/posts/secant_convergence.png">
+<meta property="article:published_time" content="2026-04-23T11:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-23T06:38:08.000Z">
 <meta property="article:author" content="Jerry Liu">
-<meta property="article:tag" content="meta">
-<meta property="article:tag" content="introduction">
+<meta property="article:tag" content="math">
+<meta property="article:tag" content="numerical methods">
+<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jerryzhenyuliu.github.io/img/posts/secant_convergence.png">
   
   
   
-  <title>Hello World - Jerry Liu</title>
+  <title>Why does the secant method converge at the golden ratio? - Jerry Liu</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -298,13 +301,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/posts/secant_convergence.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="Why does the secant method converge at the golden ratio?"></span>
           
         </div>
 
@@ -315,8 +318,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-04-22 20:00" pubdate>
-          April 22, 2026 pm
+        <time datetime="2026-04-23 19:00" pubdate>
+          April 23, 2026 pm
         </time>
       </span>
     
@@ -327,7 +330,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k words
+          4.9k words
         
       </span>
     
@@ -338,7 +341,7 @@
         
         
         
-          15 mins
+          41 mins
         
       </span>
     
@@ -377,30 +380,60 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Hello World</h1>
+            <h1 id="seo-header">Why does the secant method converge at the golden ratio?</h1>
             
             
               <div class="markdown-body">
                 
-                <p>This is the first post on what I hope will become a long-running notebook.</p>
-<p>I’m a high school student who spends a lot of time coding and reading about<br>algorithms, maths, and machine learning. Most of what I learn lives in<br>half-finished Jupyter notebooks and Markdown files on my laptop — this<br>blog is an attempt to tidy some of it up, write it out properly, and share it.</p>
-<h2 id="What-I-plan-to-post"><a href="#What-I-plan-to-post" class="headerlink" title="What I plan to post"></a>What I plan to post</h2><ul>
-<li><strong>Project write-ups</strong> — when I finish something worth writing up<br>(a sorting-algorithm benchmark, a neural network from scratch,<br>a numerical-methods comparison), I’ll turn it into a post here.</li>
-<li><strong>Short notes</strong> — things I found interesting while reading a paper<br>or watching a lecture. Not polished articles, just “here’s what<br>clicked for me”.</li>
-<li><strong>Build diaries</strong> — occasional longer posts when I take on a bigger<br>project and want to record what I tried and what failed.</li>
+                <p>I was working through a numerical-methods experiment comparing three<br>ways to solve $f(x) &#x3D; 0$: bisection, Newton’s method, and the secant<br>method. I expected the textbook story — bisection is slow, Newton is<br>fast, secant is somewhere in between.</p>
+<p>Then I measured it and the secant method’s convergence order came out<br>to about <strong>1.618</strong>.</p>
+<p>That’s the golden ratio. That’s $\varphi$. That’s the number from<br>Fibonacci and pentagons and sunflowers.</p>
+<p>What is it doing in a root-finding algorithm?</p>
+<h2 id="The-three-methods"><a href="#The-three-methods" class="headerlink" title="The three methods"></a>The three methods</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">bisection</span>(<span class="hljs-params">f, a, b, tol=<span class="hljs-number">1e-12</span></span>):<br>    <span class="hljs-keyword">while</span> (b - a) &gt; <span class="hljs-number">2</span> * tol:<br>        mid = (a + b) / <span class="hljs-number">2</span><br>        <span class="hljs-keyword">if</span> f(mid) * f(a) &lt; <span class="hljs-number">0</span>:<br>            b = mid<br>        <span class="hljs-keyword">else</span>:<br>            a = mid<br>    <span class="hljs-keyword">return</span> (a + b) / <span class="hljs-number">2</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">newton</span>(<span class="hljs-params">f, df, x, tol=<span class="hljs-number">1e-12</span></span>):<br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">abs</span>(f(x)) &lt; tol:<br>            <span class="hljs-keyword">return</span> x<br>        x = x - f(x) / df(x)<br>    <span class="hljs-keyword">return</span> x<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">secant</span>(<span class="hljs-params">f, x0, x1, tol=<span class="hljs-number">1e-12</span></span>):<br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):<br>        f0, f1 = f(x0), f(x1)<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">abs</span>(f1 - f0) &lt; <span class="hljs-number">1e-15</span>:<br>            <span class="hljs-keyword">return</span> x1<br>        x2 = x1 - f1 * (x1 - x0) / (f1 - f0)<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">abs</span>(x2 - x1) &lt; tol:<br>            <span class="hljs-keyword">return</span> x2<br>        x0, x1 = x1, x2<br>    <span class="hljs-keyword">return</span> x1<br></code></pre></td></tr></table></figure>
+
+<p>Bisection halves the interval each step — that’s <strong>linear</strong> convergence.<br>The error at step $n+1$ is roughly half the error at step $n$.</p>
+<p>Newton’s method replaces the true function with its tangent line.<br>It’s the gold standard: under nice conditions its error <strong>squares</strong><br>each step. The number of correct digits roughly <strong>doubles</strong> every<br>iteration. That’s <strong>quadratic</strong> convergence — order 2.</p>
+<p>The secant method is “Newton’s method, but for people who don’t have<br>a formula for $f’(x)$”. It approximates the derivative using a finite<br>difference between the two most recent points. You’d think it’d be<br>somewhere between linear (order 1) and quadratic (order 2).</p>
+<p>And it is. Specifically: it’s order $\varphi \approx 1.618$.</p>
+<h2 id="The-measurement"><a href="#The-measurement" class="headerlink" title="The measurement"></a>The measurement</h2><p>Solving $\cos(x) &#x3D; x$ starting from $x_0 &#x3D; 0, x_1 &#x3D; 1$. The true root<br>is about $0.7390851332$. Here’s the error at each secant step:</p>
+<p>| step | $x$ | error $|e_n|$ |<br>|——|—–|—–|<br>| 1 | 0.6850734… | $5.4 \times 10^{-2}$ |<br>| 2 | 0.7362989… | $2.8 \times 10^{-3}$ |<br>| 3 | 0.7391112… | $2.6 \times 10^{-5}$ |<br>| 4 | 0.7390851352… | $2.0 \times 10^{-9}$ |<br>| 5 | 0.7390851332… | $5.6 \times 10^{-14}$ |<br>| 6 | 0.7390851332… | $&lt; 10^{-15}$ |</p>
+<p>Watch what happens to the number of correct digits per step:</p>
+<ul>
+<li>step 1 → 2: goes from ~1 to ~3 digits (gained ~2)</li>
+<li>step 2 → 3: goes from ~3 to ~5 digits (gained ~2)</li>
+<li>step 3 → 4: goes from ~5 to ~9 digits (gained ~4)</li>
+<li>step 4 → 5: goes from ~9 to ~14 digits (gained ~5)</li>
 </ul>
-<h2 id="Currently-working-on"><a href="#Currently-working-on" class="headerlink" title="Currently working on"></a>Currently working on</h2><p>Three projects, all in pure Python, all landing on GitHub this week:</p>
-<ol>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/sorting-algorithms">Sorting algorithms</a><br>— six classical sorts, experiments on six different input distributions.<br>I also tried designing a median-of-5 pivot variant for quicksort;<br>it saves ~18% of comparisons on random input.</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/computational-math">Computational math</a><br>— Monte Carlo estimation of pi and e, the Prime Number Theorem,<br>Goldbach’s conjecture, and three methods for solving equations<br>numerically. The most surprising thing I learned: the secant<br>method’s convergence order is the golden ratio.</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/neural-networks-from-scratch">Neural networks from scratch</a><br>— building up from a single neuron to a multi-layer network.<br>No NumPy, no PyTorch. Every derivative by hand, every gradient<br>verified with finite differences.</p>
-</li>
-</ol>
-<p>Write-ups of each will land on this blog over the coming weeks.</p>
-<h2 id="Why-blog-at-all"><a href="#Why-blog-at-all" class="headerlink" title="Why blog at all"></a>Why blog at all</h2><p>Two reasons. First, writing forces me to notice when I don’t actually<br>understand something — I can fool myself in my head but not on paper.<br>Second, almost every good resource I’ve found online was written by<br>someone who wasn’t famous or formally trained, just curious and willing<br>to put their notes up. That’s the kind of resource I’d like to<br>contribute to eventually.</p>
-<p>More to come.</p>
+<p>Compare to Newton’s on the same problem, which <strong>doubles</strong> the digit<br>count each step; and bisection, which adds about <strong>0.3 digits</strong> per<br>step. Secant lives in between. But not in the middle — it pulls toward<br>Newton, which is where the golden ratio comes from.</p>
+<p><img src="/img/posts/secant_convergence.png" srcset="/img/loading.gif" lazyload alt="Secant error vs step, with golden-ratio prediction overlaid"></p>
+<p>The dashed line is the prediction $|e_{n+1}| \sim C \cdot |e_n|^{\varphi}$,<br>and the measurement tracks it closely.</p>
+<h2 id="Where-varphi-comes-from"><a href="#Where-varphi-comes-from" class="headerlink" title="Where $\varphi$ comes from"></a>Where $\varphi$ comes from</h2><p>Here’s the reasoning. For a smooth function $f$ with a simple root $r$,<br>you can show (with some Taylor-expansion algebra) that the secant-method<br>error satisfies, in the limit:</p>
+<p>$$<br>|e_{n+1}| \approx C \cdot |e_n| \cdot |e_{n-1}|<br>$$</p>
+<p>That is: the <em>new</em> error depends on the <em>previous two</em> errors multiplied<br>together. (Newton’s method doesn’t have this coupling — each step only<br>depends on the current error.)</p>
+<p>Now suppose $|e_n| \sim K \cdot \alpha^n$ for some constants $K$ and $\alpha$.<br>Substituting:</p>
+<p>$$<br>K \alpha^{n+1} &#x3D; C \cdot K \alpha^n \cdot K \alpha^{n-1}<br>$$</p>
+<p>Dividing by $K \alpha^{n-1}$:</p>
+<p>$$<br>\alpha^2 &#x3D; C K \alpha^0 &#x3D; CK<br>$$</p>
+<p>Hmm, that gave me a constant, not an equation in $\alpha$. Let me try a<br>more flexible ansatz: $|e_n| \sim K^{\varphi^n}$, which says the error<br>shrinks “super-exponentially” in $n$, with some exponent that grows. Take<br>the log of both sides of $|e_{n+1}| \sim |e_n| \cdot |e_{n-1}|$:</p>
+<p>$$<br>\log |e_{n+1}| \sim \log |e_n| + \log |e_{n-1}|<br>$$</p>
+<p>So if I let $L_n &#x3D; -\log |e_n|$ (positive when the error is small), then:</p>
+<p>$$<br>L_{n+1} &#x3D; L_n + L_{n-1}<br>$$</p>
+<p><strong>That’s the Fibonacci recurrence.</strong> And the asymptotic growth rate of<br>Fibonacci numbers is $\varphi &#x3D; (1 + \sqrt{5})&#x2F;2$. So:</p>
+<p>$$<br>L_{n+1} \sim \varphi \cdot L_n<br>$$</p>
+<p>which translates back to:</p>
+<p>$$<br>|e_{n+1}| \sim |e_n|^{\varphi}<br>$$</p>
+<p>Convergence order &#x3D; $\varphi$. The secant method inherits its<br>convergence rate directly from the Fibonacci recurrence.</p>
+<h2 id="Why-this-is-the-thing-I-remember-most-from-this-project"><a href="#Why-this-is-the-thing-I-remember-most-from-this-project" class="headerlink" title="Why this is the thing I remember most from this project"></a>Why this is the thing I remember most from this project</h2><p>I’ve seen $\varphi$ in dozens of places. Pentagons. Sunflower seeds.<br>Fibonacci ratios. Self-similar pineapples. The Parthenon, if you<br>believe the aesthetics people.</p>
+<p>Every one of those is a <strong>structural</strong> appearance of $\varphi$ — it’s<br>there because the geometry or the recurrence enforces it. But this was<br>the first time I’d seen it <strong>emerge from an error analysis</strong> — as a<br>consequence of which two previous errors the algorithm depends on, and<br>nothing else. No geometry. Nothing you could draw as a spiral. Just a<br>recurrence.</p>
+<p>The same number that describes how leaves arrange on a stem describes<br>how fast the secant method tracks down a root of $\cos(x) &#x3D; x$. That’s<br>a lot more surprising than any of the usual $\varphi$ encounters.</p>
+<h2 id="Practical-corollary"><a href="#Practical-corollary" class="headerlink" title="Practical corollary"></a>Practical corollary</h2><p>So which root-finder to use in practice?</p>
+<ul>
+<li><strong>Bisection</strong>: slow (~40 steps to hit $10^{-12}$), but <strong>cannot fail</strong><br>as long as $f(a)$ and $f(b)$ have opposite signs. Use it when you<br>care about robustness more than speed.</li>
+<li><strong>Newton</strong>: fastest (~6 steps), but needs $f’(x)$ explicitly, and can<br>diverge or land on the wrong root if your initial guess is poor.</li>
+<li><strong>Secant</strong>: ~8 steps, no derivative needed. Its robustness is between<br>the other two. In most engineering code you’ll see secant-like methods<br>(Brent’s method is a hybrid) chosen over Newton precisely because<br>computing a derivative is often impractical.</li>
+</ul>
+<p>And next time someone asks me “where does the golden ratio show up”, I<br>have one more answer.</p>
+<p>Code for this experiment:<br><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/computational-math/blob/main/05_root_finding.py">github.com&#x2F;jerryzhenyuliu&#x2F;computational-math&#x2F;blob&#x2F;main&#x2F;05_root_finding.py</a></p>
 
                 
               </div>
@@ -434,9 +467,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/meta/" class="print-no-link">#meta</a>
+        <a href="/tags/math/" class="print-no-link">#math</a>
       
-        <a href="/tags/introduction/" class="print-no-link">#introduction</a>
+        <a href="/tags/numerical-methods/" class="print-no-link">#numerical methods</a>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
       
     </div>
   
@@ -448,8 +483,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>https://jerryzhenyuliu.github.io/2026/04/22/hello-world/</div>
+      <div>Why does the secant method converge at the golden ratio?</div>
+      <div>https://jerryzhenyuliu.github.io/2026/04/23/golden-ratio-secant-method/</div>
     </div>
     <div class="license-meta">
       
@@ -461,7 +496,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>April 22, 2026</div>
+          <div>April 23, 2026</div>
         </div>
       
       
@@ -493,15 +528,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/04/23/sorting-algorithms-big-o-gap/" title="Six sorting algorithms, and the O(n²) gap that hit harder than I expected">
+                      <a href="/2026/04/23/neural-network-from-scratch-xor/" title="Building a neural network from scratch: from one neuron to solving XOR">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Six sorting algorithms, and the O(n²) gap that hit harder than I expected</span>
+                        <span class="hidden-mobile">Building a neural network from scratch: from one neuron to solving XOR</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2026/04/23/median-of-five-quicksort/" title="A median-of-5 pivot for quicksort — the result I&#39;m most proud of">
+                        <span class="hidden-mobile">A median-of-5 pivot for quicksort — the result I&#39;m most proud of</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
@@ -555,6 +596,12 @@
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -811,6 +858,49 @@
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 

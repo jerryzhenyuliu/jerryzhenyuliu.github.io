@@ -19,23 +19,27 @@
   <meta name="author" content="Jerry Liu">
   <meta name="keywords" content="jerry liu, cs, algorithms, neural networks, high school">
   
-    <meta name="description" content="This is the first post on what I hope will become a long-running notebook. I’m a high school student who spends a lot of time coding and reading aboutalgorithms, maths, and machine learning. Most of w">
+    <meta name="description" content="The assignment for my sorting project was to implement and benchmark sixclassical sorting algorithms. I did. But part-way through, I gotcurious about something: random-pivot quicksort works well on av">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://jerryzhenyuliu.github.io/2026/04/22/hello-world/index.html">
+<meta property="og:title" content="A median-of-5 pivot for quicksort — the result I&#39;m most proud of">
+<meta property="og:url" content="https://jerryzhenyuliu.github.io/2026/04/23/median-of-five-quicksort/index.html">
 <meta property="og:site_name" content="Jerry Liu">
-<meta property="og:description" content="This is the first post on what I hope will become a long-running notebook. I’m a high school student who spends a lot of time coding and reading aboutalgorithms, maths, and machine learning. Most of w">
+<meta property="og:description" content="The assignment for my sorting project was to implement and benchmark sixclassical sorting algorithms. I did. But part-way through, I gotcurious about something: random-pivot quicksort works well on av">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-04-22T12:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-22T09:17:56.000Z">
+<meta property="og:image" content="https://jerryzhenyuliu.github.io/img/posts/quicksort_variants.png">
+<meta property="article:published_time" content="2026-04-23T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-23T06:26:58.000Z">
 <meta property="article:author" content="Jerry Liu">
-<meta property="article:tag" content="meta">
-<meta property="article:tag" content="introduction">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="algorithms">
+<meta property="article:tag" content="sorting">
+<meta property="article:tag" content="quicksort">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jerryzhenyuliu.github.io/img/posts/quicksort_variants.png">
   
   
   
-  <title>Hello World - Jerry Liu</title>
+  <title>A median-of-5 pivot for quicksort — the result I&#39;m most proud of - Jerry Liu</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -298,13 +302,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/posts/quicksort_variants.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="A median-of-5 pivot for quicksort — the result I&#39;m most proud of"></span>
           
         </div>
 
@@ -315,8 +319,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-04-22 20:00" pubdate>
-          April 22, 2026 pm
+        <time datetime="2026-04-23 15:00" pubdate>
+          April 23, 2026 pm
         </time>
       </span>
     
@@ -327,7 +331,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k words
+          5.2k words
         
       </span>
     
@@ -338,7 +342,7 @@
         
         
         
-          15 mins
+          44 mins
         
       </span>
     
@@ -377,30 +381,83 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Hello World</h1>
+            <h1 id="seo-header">A median-of-5 pivot for quicksort — the result I&#39;m most proud of</h1>
             
             
               <div class="markdown-body">
                 
-                <p>This is the first post on what I hope will become a long-running notebook.</p>
-<p>I’m a high school student who spends a lot of time coding and reading about<br>algorithms, maths, and machine learning. Most of what I learn lives in<br>half-finished Jupyter notebooks and Markdown files on my laptop — this<br>blog is an attempt to tidy some of it up, write it out properly, and share it.</p>
-<h2 id="What-I-plan-to-post"><a href="#What-I-plan-to-post" class="headerlink" title="What I plan to post"></a>What I plan to post</h2><ul>
-<li><strong>Project write-ups</strong> — when I finish something worth writing up<br>(a sorting-algorithm benchmark, a neural network from scratch,<br>a numerical-methods comparison), I’ll turn it into a post here.</li>
-<li><strong>Short notes</strong> — things I found interesting while reading a paper<br>or watching a lecture. Not polished articles, just “here’s what<br>clicked for me”.</li>
-<li><strong>Build diaries</strong> — occasional longer posts when I take on a bigger<br>project and want to record what I tried and what failed.</li>
+                <p>The assignment for my sorting project was to implement and benchmark six<br>classical sorting algorithms. I did. But part-way through, I got<br>curious about something: random-pivot quicksort works <em>well on average</em>,<br>but every single run is a roll of the dice. Can I do better without<br>giving up the simplicity?</p>
+<p>This post is about the thing I tried, and the result (~18% fewer<br>comparisons, ~12% faster wall time on random input). It’s my favorite<br>outcome from the whole project.</p>
+<h2 id="The-problem-with-a-random-pivot"><a href="#The-problem-with-a-random-pivot" class="headerlink" title="The problem with a random pivot"></a>The problem with a random pivot</h2><p>Quicksort’s speed depends almost entirely on one thing: how balanced the<br>partition is. If the pivot happens to land near the median of the<br>subarray, you split it roughly in half and the recursion is O(log n) deep.<br>If the pivot lands near the extreme, you get a 1-vs-(n-1) split, the<br>recursion is O(n) deep, and the whole thing degrades to O(n²).</p>
+<p>Random pivot is a pragmatic defense — it prevents an adversarial input<br>from being a worst case, but <em>any single run</em> can still get unlucky.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">quick_sort_random</span>(<span class="hljs-params">arr</span>):<br>    arr = arr.copy()<br>    comparisons = [<span class="hljs-number">0</span>]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">partition</span>(<span class="hljs-params">a, lo, hi</span>):<br>        p = random.randint(lo, hi)           <span class="hljs-comment"># random pivot</span><br>        a[p], a[hi] = a[hi], a[p]<br>        pivot = a[hi]<br>        i = lo - <span class="hljs-number">1</span><br>        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(lo, hi):<br>            comparisons[<span class="hljs-number">0</span>] += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> a[j] &lt;= pivot:<br>                i += <span class="hljs-number">1</span><br>                a[i], a[j] = a[j], a[i]<br>        a[i + <span class="hljs-number">1</span>], a[hi] = a[hi], a[i + <span class="hljs-number">1</span>]<br>        <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span><br>    <span class="hljs-comment"># ... recurse on both sides</span><br></code></pre></td></tr></table></figure>
+
+<p>On average this is great. On any <em>specific</em> input, there’s variance.</p>
+<h2 id="The-idea-sample-more-pick-the-middle"><a href="#The-idea-sample-more-pick-the-middle" class="headerlink" title="The idea: sample more, pick the middle"></a>The idea: sample more, pick the middle</h2><p>Median-of-three is the textbook fix — pick the first, middle, and last<br>elements, take the median of those three as the pivot. It’s cheap (a<br>few extra comparisons per call) and noticeably more stable than random.</p>
+<p>I wanted to see how far this goes. What if I sampled <strong>five</strong> positions<br>instead?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">_pick_median5</span>(<span class="hljs-params">arr, left, right</span>):<br>    mid = (left + right) // <span class="hljs-number">2</span><br>    quarter = <span class="hljs-built_in">max</span>(<span class="hljs-number">1</span>, (right - left) // <span class="hljs-number">4</span>)<br>    candidates = [<br>        (arr[left],            left),<br>        (arr[left + quarter],  left + quarter),<br>        (arr[mid],             mid),<br>        (arr[right - quarter], right - quarter),<br>        (arr[right],           right),<br>    ]<br>    candidates.sort(key=<span class="hljs-keyword">lambda</span> x: x[<span class="hljs-number">0</span>])<br>    <span class="hljs-keyword">return</span> candidates[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>]   <span class="hljs-comment"># index of the median-valued sample</span><br></code></pre></td></tr></table></figure>
+
+<p>The five positions are evenly spaced across the subarray. I sort those<br>five by value, take the one with the median value, and use its position<br>as the pivot.</p>
+<p>The cost per call is <em>constant</em> — five reads plus sorting five items,<br>which is some fixed number of comparisons. The asymptotic complexity<br>is still O(n log n); I’m not going to change that. But the <strong>split<br>quality</strong> improves, and that compounds at every level of the recursion.</p>
+<h2 id="The-measurement"><a href="#The-measurement" class="headerlink" title="The measurement"></a>The measurement</h2><p>Uniform random input, same seed, single run (not averaged over many —<br>this is what the first experimental look felt like):</p>
+<table>
+<thead>
+<tr>
+<th>n</th>
+<th>random pivot</th>
+<th>3-way pivot</th>
+<th>median-of-5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10</td>
+<td>0.06 ms, 25 cmps</td>
+<td>0.08 ms, 22 cmps</td>
+<td>0.06 ms, <strong>21 cmps</strong></td>
+</tr>
+<tr>
+<td>100</td>
+<td>1.68 ms, 667 cmps</td>
+<td>1.11 ms, 655 cmps</td>
+<td>1.25 ms, <strong>550 cmps</strong></td>
+</tr>
+<tr>
+<td>1,000</td>
+<td>11.96 ms, 11,140 cmps</td>
+<td>14.03 ms, 11,266 cmps</td>
+<td><strong>9.48 ms</strong>, <strong>8,762 cmps</strong></td>
+</tr>
+<tr>
+<td>10,000</td>
+<td>132.2 ms, 154,674 cmps</td>
+<td>148.8 ms, 154,144 cmps</td>
+<td><strong>127.1 ms</strong>, <strong>125,576 cmps</strong></td>
+</tr>
+<tr>
+<td>100,000</td>
+<td>1394 ms, 2,016,270 cmps</td>
+<td>1566 ms, 1,921,818 cmps</td>
+<td><strong>1230 ms</strong>, <strong>1,641,453 cmps</strong></td>
+</tr>
+</tbody></table>
+<p>At n &#x3D; 100,000, median-of-5 does <strong>19% fewer comparisons</strong> than random<br>pivot (2.02M → 1.64M) and finishes <strong>~12% faster</strong> in wall time<br>(1394 ms → 1230 ms).</p>
+<p><img src="/img/posts/quicksort_variants.png" srcset="/img/loading.gif" lazyload alt="Time comparison of three quicksort variants"></p>
+<p>The gap actually widens as n grows — because each recursion level’s<br>savings compound with every other level.</p>
+<h2 id="What-I-think-happened"><a href="#What-I-think-happened" class="headerlink" title="What I think happened"></a>What I think happened</h2><p>Math says: if I pick 5 random samples from an input and take their<br>median, the pivot’s <strong>expected deviation from the true median</strong> is<br>substantially smaller than with 1 or 3 samples. The variance of the<br>sample median shrinks with more samples.</p>
+<p>Concretely: a random pivot has ~1&#x2F;n probability of being the worst<br>possible choice. Median-of-5 has ~(1&#x2F;n)⁵ probability of <em>all five samples</em><br>being bad simultaneously. The tail of worst cases gets dramatically<br>thinner even though the constant cost per call doesn’t change.</p>
+<p>So what I’m buying is <strong>lower variance</strong>, not a faster asymptotic. That’s<br>reflected in the results: median-of-5 doesn’t beat random pivot <em>by a<br>lot</em>, but it beats it consistently, and it rules out the rare disaster.</p>
+<h2 id="What-the-real-libraries-do"><a href="#What-the-real-libraries-do" class="headerlink" title="What the real libraries do"></a>What the real libraries do</h2><p>After I was proud of this, I looked up what CPython actually does. List<br>sort is Timsort, which isn’t quicksort at all — it’s a hybrid of merge<br>sort and insertion sort that exploits pre-existing order in real data.<br>So Python doesn’t face the quicksort-pivot problem.</p>
+<p>But Java’s <code>Arrays.sort</code> for primitives is dual-pivot quicksort —<br>picks <strong>two</strong> pivots per call, and partitions into three regions<br>(less, between, greater). The idea is the same: spend a bit more per<br>call to get more balanced splits.</p>
+<p>So my median-of-5 is the amateur version of a real production technique.<br>The core pattern — “pay constant extra cost per call to reduce the tail<br>variance” — is the same.</p>
+<h2 id="Things-I-didn’t-try-yet"><a href="#Things-I-didn’t-try-yet" class="headerlink" title="Things I didn’t try (yet)"></a>Things I didn’t try (yet)</h2><ul>
+<li><strong>Introsort</strong>: run quicksort normally, and switch to heapsort if<br>recursion depth exceeds log₂(n). That provably bounds the worst<br>case at O(n log n), which my version doesn’t do.</li>
+<li><strong>Quickselect-based pivot</strong>: find the true median in O(n) time (there’s<br>an algorithm). Too expensive for most subarrays, but might be worth it<br>near the root of the recursion.</li>
+<li><strong>Timing against <code>list.sort()</code></strong>: Python’s built-in will crush all of<br>mine because it’s implemented in C. I haven’t yet — partly because it<br>would be humbling and partly because the comparison only really makes<br>sense at the algorithmic level, not the implementation level.</li>
 </ul>
-<h2 id="Currently-working-on"><a href="#Currently-working-on" class="headerlink" title="Currently working on"></a>Currently working on</h2><p>Three projects, all in pure Python, all landing on GitHub this week:</p>
-<ol>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/sorting-algorithms">Sorting algorithms</a><br>— six classical sorts, experiments on six different input distributions.<br>I also tried designing a median-of-5 pivot variant for quicksort;<br>it saves ~18% of comparisons on random input.</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/computational-math">Computational math</a><br>— Monte Carlo estimation of pi and e, the Prime Number Theorem,<br>Goldbach’s conjecture, and three methods for solving equations<br>numerically. The most surprising thing I learned: the secant<br>method’s convergence order is the golden ratio.</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/neural-networks-from-scratch">Neural networks from scratch</a><br>— building up from a single neuron to a multi-layer network.<br>No NumPy, no PyTorch. Every derivative by hand, every gradient<br>verified with finite differences.</p>
-</li>
-</ol>
-<p>Write-ups of each will land on this blog over the coming weeks.</p>
-<h2 id="Why-blog-at-all"><a href="#Why-blog-at-all" class="headerlink" title="Why blog at all"></a>Why blog at all</h2><p>Two reasons. First, writing forces me to notice when I don’t actually<br>understand something — I can fool myself in my head but not on paper.<br>Second, almost every good resource I’ve found online was written by<br>someone who wasn’t famous or formally trained, just curious and willing<br>to put their notes up. That’s the kind of resource I’d like to<br>contribute to eventually.</p>
-<p>More to come.</p>
+<h2 id="The-part-that-surprised-me"><a href="#The-part-that-surprised-me" class="headerlink" title="The part that surprised me"></a>The part that surprised me</h2><p>I expected median-of-5 to be “maybe slightly better” than random pivot.<br><strong>19% fewer comparisons at n &#x3D; 100,000</strong> is more than I expected.</p>
+<p>I also didn’t expect 3-way partition to be <em>slower</em> than random-pivot<br>quicksort on uniform random input — the yellow line in the chart above<br>is consistently above the red. 3-way is a big win on duplicate-heavy<br>input (see my <a href="/2026/04/23/sorting-algorithms-big-o-gap/">previous post</a>),<br>but on uniform random the extra partition bookkeeping costs more than<br>the infrequent duplicates save.</p>
+<p>This is what I mean by wanting to <em>see</em> things rather than read about<br>them. “Algorithm A is better than algorithm B” is almost always true<br>only under specific conditions, and the conditions are usually more<br>important than the algorithm.</p>
+<p>Code for this post: <a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/sorting-algorithms/blob/main/quick_median5.py">github.com&#x2F;jerryzhenyuliu&#x2F;sorting-algorithms&#x2F;blob&#x2F;main&#x2F;quick_median5.py</a></p>
 
                 
               </div>
@@ -419,7 +476,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/notes/" class="category-chain-item">notes</a>
+  <a href="/categories/project-write-up/" class="category-chain-item">project write-up</a>
   
   
 
@@ -434,9 +491,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/meta/" class="print-no-link">#meta</a>
+        <a href="/tags/python/" class="print-no-link">#python</a>
       
-        <a href="/tags/introduction/" class="print-no-link">#introduction</a>
+        <a href="/tags/algorithms/" class="print-no-link">#algorithms</a>
+      
+        <a href="/tags/sorting/" class="print-no-link">#sorting</a>
+      
+        <a href="/tags/quicksort/" class="print-no-link">#quicksort</a>
       
     </div>
   
@@ -448,8 +509,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>https://jerryzhenyuliu.github.io/2026/04/22/hello-world/</div>
+      <div>A median-of-5 pivot for quicksort — the result I&#39;m most proud of</div>
+      <div>https://jerryzhenyuliu.github.io/2026/04/23/median-of-five-quicksort/</div>
     </div>
     <div class="license-meta">
       
@@ -461,7 +522,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>April 22, 2026</div>
+          <div>April 23, 2026</div>
         </div>
       
       
@@ -493,15 +554,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/04/23/sorting-algorithms-big-o-gap/" title="Six sorting algorithms, and the O(n²) gap that hit harder than I expected">
+                      <a href="/2026/04/23/golden-ratio-secant-method/" title="Why does the secant method converge at the golden ratio?">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Six sorting algorithms, and the O(n²) gap that hit harder than I expected</span>
+                        <span class="hidden-mobile">Why does the secant method converge at the golden ratio?</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2026/04/23/sorting-algorithms-big-o-gap/" title="Six sorting algorithms, and the O(n²) gap that hit harder than I expected">
+                        <span class="hidden-mobile">Six sorting algorithms, and the O(n²) gap that hit harder than I expected</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

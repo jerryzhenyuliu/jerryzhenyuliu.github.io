@@ -19,23 +19,26 @@
   <meta name="author" content="Jerry Liu">
   <meta name="keywords" content="jerry liu, cs, algorithms, neural networks, high school">
   
-    <meta name="description" content="This is the first post on what I hope will become a long-running notebook. I’m a high school student who spends a lot of time coding and reading aboutalgorithms, maths, and machine learning. Most of w">
+    <meta name="description" content="I just finished my first “proper” CS project: implement six classicalsorting algorithms and actually measure how they stack up. I knew goingin that “O(n log n) beats O(n²)”. The textbook says so. But">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://jerryzhenyuliu.github.io/2026/04/22/hello-world/index.html">
+<meta property="og:title" content="Six sorting algorithms, and the O(n²) gap that hit harder than I expected">
+<meta property="og:url" content="https://jerryzhenyuliu.github.io/2026/04/23/sorting-algorithms-big-o-gap/index.html">
 <meta property="og:site_name" content="Jerry Liu">
-<meta property="og:description" content="This is the first post on what I hope will become a long-running notebook. I’m a high school student who spends a lot of time coding and reading aboutalgorithms, maths, and machine learning. Most of w">
+<meta property="og:description" content="I just finished my first “proper” CS project: implement six classicalsorting algorithms and actually measure how they stack up. I knew goingin that “O(n log n) beats O(n²)”. The textbook says so. But">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-04-22T12:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-22T09:17:56.000Z">
+<meta property="og:image" content="https://jerryzhenyuliu.github.io/img/posts/sorts_loglog.png">
+<meta property="article:published_time" content="2026-04-23T03:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-23T06:26:10.000Z">
 <meta property="article:author" content="Jerry Liu">
-<meta property="article:tag" content="meta">
-<meta property="article:tag" content="introduction">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="algorithms">
+<meta property="article:tag" content="sorting">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jerryzhenyuliu.github.io/img/posts/sorts_loglog.png">
   
   
   
-  <title>Hello World - Jerry Liu</title>
+  <title>Six sorting algorithms, and the O(n²) gap that hit harder than I expected - Jerry Liu</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -298,13 +301,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/posts/sorts_loglog.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="Six sorting algorithms, and the O(n²) gap that hit harder than I expected"></span>
           
         </div>
 
@@ -315,8 +318,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-04-22 20:00" pubdate>
-          April 22, 2026 pm
+        <time datetime="2026-04-23 11:00" pubdate>
+          April 23, 2026 am
         </time>
       </span>
     
@@ -327,7 +330,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k words
+          4.4k words
         
       </span>
     
@@ -338,7 +341,7 @@
         
         
         
-          15 mins
+          37 mins
         
       </span>
     
@@ -377,30 +380,83 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Hello World</h1>
+            <h1 id="seo-header">Six sorting algorithms, and the O(n²) gap that hit harder than I expected</h1>
             
             
               <div class="markdown-body">
                 
-                <p>This is the first post on what I hope will become a long-running notebook.</p>
-<p>I’m a high school student who spends a lot of time coding and reading about<br>algorithms, maths, and machine learning. Most of what I learn lives in<br>half-finished Jupyter notebooks and Markdown files on my laptop — this<br>blog is an attempt to tidy some of it up, write it out properly, and share it.</p>
-<h2 id="What-I-plan-to-post"><a href="#What-I-plan-to-post" class="headerlink" title="What I plan to post"></a>What I plan to post</h2><ul>
-<li><strong>Project write-ups</strong> — when I finish something worth writing up<br>(a sorting-algorithm benchmark, a neural network from scratch,<br>a numerical-methods comparison), I’ll turn it into a post here.</li>
-<li><strong>Short notes</strong> — things I found interesting while reading a paper<br>or watching a lecture. Not polished articles, just “here’s what<br>clicked for me”.</li>
-<li><strong>Build diaries</strong> — occasional longer posts when I take on a bigger<br>project and want to record what I tried and what failed.</li>
-</ul>
-<h2 id="Currently-working-on"><a href="#Currently-working-on" class="headerlink" title="Currently working on"></a>Currently working on</h2><p>Three projects, all in pure Python, all landing on GitHub this week:</p>
+                <p>I just finished my first “proper” CS project: implement six classical<br>sorting algorithms and actually measure how they stack up. I knew going<br>in that “O(n log n) beats O(n²)”. The textbook says so. But I wanted to<br>see the gap with my own eyes, not just know it as a fact.</p>
+<p>Seeing the numbers on my own laptop turned out to be a different kind of<br>understanding.</p>
+<h2 id="The-lineup"><a href="#The-lineup" class="headerlink" title="The lineup"></a>The lineup</h2><p>Six algorithms, same function signature so the experiment could treat<br>them uniformly:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">bubble_sort</span>(<span class="hljs-params">arr</span>):<br>    arr = arr.copy()<br>    n = <span class="hljs-built_in">len</span>(arr)<br>    comparisons = <span class="hljs-number">0</span><br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>        swapped = <span class="hljs-literal">False</span><br>        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n - i - <span class="hljs-number">1</span>):<br>            comparisons += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> arr[j] &gt; arr[j + <span class="hljs-number">1</span>]:<br>                arr[j], arr[j + <span class="hljs-number">1</span>] = arr[j + <span class="hljs-number">1</span>], arr[j]<br>                swapped = <span class="hljs-literal">True</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> swapped:           <span class="hljs-comment"># early termination trick</span><br>            <span class="hljs-keyword">break</span><br><br>    <span class="hljs-keyword">return</span> arr, comparisons<br></code></pre></td></tr></table></figure>
+
+<p>Similar single-file implementations for insertion sort, merge sort,<br>quicksort (with random pivot and with 3-way Dutch-flag partition), and<br>counting sort. Every one of them returns <code>(sorted_list, comparison_count)</code> —<br>so I could count comparisons separately from wall time.</p>
+<h2 id="Six-input-distributions"><a href="#Six-input-distributions" class="headerlink" title="Six input distributions"></a>Six input distributions</h2><p>The textbook complexity is for “random” input, but I wanted to probe the<br>edges:</p>
 <ol>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/sorting-algorithms">Sorting algorithms</a><br>— six classical sorts, experiments on six different input distributions.<br>I also tried designing a median-of-5 pivot variant for quicksort;<br>it saves ~18% of comparisons on random input.</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/computational-math">Computational math</a><br>— Monte Carlo estimation of pi and e, the Prime Number Theorem,<br>Goldbach’s conjecture, and three methods for solving equations<br>numerically. The most surprising thing I learned: the secant<br>method’s convergence order is the golden ratio.</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/neural-networks-from-scratch">Neural networks from scratch</a><br>— building up from a single neuron to a multi-layer network.<br>No NumPy, no PyTorch. Every derivative by hand, every gradient<br>verified with finite differences.</p>
-</li>
+<li>Uniform random — the default</li>
+<li>Already sorted</li>
+<li>Reverse sorted</li>
+<li>Almost sorted (5% of elements swapped)</li>
+<li>Many duplicates (values only in <code>[0..9]</code>)</li>
+<li>Block-sorted (sorted chunks concatenated in shuffled order)</li>
 </ol>
-<p>Write-ups of each will land on this blog over the coming weeks.</p>
-<h2 id="Why-blog-at-all"><a href="#Why-blog-at-all" class="headerlink" title="Why blog at all"></a>Why blog at all</h2><p>Two reasons. First, writing forces me to notice when I don’t actually<br>understand something — I can fool myself in my head but not on paper.<br>Second, almost every good resource I’ve found online was written by<br>someone who wasn’t famous or formally trained, just curious and willing<br>to put their notes up. That’s the kind of resource I’d like to<br>contribute to eventually.</p>
-<p>More to come.</p>
+<p>Data generation uses a fixed seed so runs are reproducible.</p>
+<h2 id="What-the-numbers-look-like"><a href="#What-the-numbers-look-like" class="headerlink" title="What the numbers look like"></a>What the numbers look like</h2><p>I ran each (algorithm × distribution × n) seven times and kept the<br>median.  Here’s the big-picture log-log plot on uniform random input:</p>
+<p><img src="/img/posts/sorts_loglog.png" srcset="/img/loading.gif" lazyload alt="Time and comparisons vs n on log-log axes"></p>
+<p>The lines you want to look at:</p>
+<ul>
+<li><strong>Red and yellow (bubble, insertion)</strong> — steeper. Each decade of n adds<br>two decades of time. That’s slope ≈ 2, which is O(n²) on log-log.</li>
+<li><strong>Green and blue (merge, quick)</strong> — shallower. Each decade of n adds<br>slightly more than one decade of time. Slope ≈ 1, consistent with<br>O(n log n).</li>
+<li><strong>Purple (counting sort)</strong> — almost flat at first, then a sudden<br>hop. More on that below.</li>
+</ul>
+<h2 id="The-gap-in-raw-numbers"><a href="#The-gap-in-raw-numbers" class="headerlink" title="The gap in raw numbers"></a>The gap in raw numbers</h2><p>Time at n &#x3D; 10,000 on uniform random input:</p>
+<table>
+<thead>
+<tr>
+<th>algorithm</th>
+<th>time (ms)</th>
+<th>comparisons</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bubble</td>
+<td><strong>10,840</strong></td>
+<td>49,991,840</td>
+</tr>
+<tr>
+<td>insertion</td>
+<td><strong>4,344</strong></td>
+<td>25,059,528</td>
+</tr>
+<tr>
+<td>merge</td>
+<td>33</td>
+<td>120,370</td>
+</tr>
+<tr>
+<td>quick (random)</td>
+<td>45</td>
+<td>150,539</td>
+</tr>
+<tr>
+<td>counting</td>
+<td>28</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>Bubble sort took <strong>almost eleven seconds</strong> on a list of ten thousand<br>integers. Merge sort took 33 milliseconds. That’s a factor of ~330.<br>“O(n²) is slower” stops being an abstract phrase when one version is<br>literally waiting for lunch to finish and the other one is done before<br>you blink.</p>
+<p>The comparison counts tell the same story without the noise of machine<br>timing. Merge sort does ~120K comparisons on that input; bubble sort<br>does <strong>50 million</strong>.</p>
+<h2 id="The-interesting-edge-input-shape-matters-a-lot"><a href="#The-interesting-edge-input-shape-matters-a-lot" class="headerlink" title="The interesting edge: input shape matters a lot"></a>The interesting edge: input shape matters a lot</h2><p>Here’s the same six algorithms across all six input distributions, at<br>n &#x3D; 1000:</p>
+<p><img src="/img/posts/sorts_by_distribution.png" srcset="/img/loading.gif" lazyload alt="Comparisons by algorithm and distribution"></p>
+<p>A few things jumped out:</p>
+<h3 id="Bubble-sort-has-one-superpower"><a href="#Bubble-sort-has-one-superpower" class="headerlink" title="Bubble sort has one superpower"></a>Bubble sort has one superpower</h3><p>On already-sorted input, bubble sort does <em>one</em> pass. A single sweep of<br>O(n) comparisons, the early-termination flag never trips, it exits.<br>On that one specific input, the thing everyone calls “the worst sort”<br>beats everything except counting sort. Useful reminder that “best” is<br>never a property of an algorithm alone — it’s always algorithm <strong>times</strong><br>input.</p>
+<h3 id="Quicksort’s-weakness-is-duplicates-not-size"><a href="#Quicksort’s-weakness-is-duplicates-not-size" class="headerlink" title="Quicksort’s weakness is duplicates, not size"></a>Quicksort’s weakness is duplicates, not size</h3><p>The “many duplicates” column is where I caught something real. Normal<br>random-pivot quicksort uses roughly as many comparisons on duplicate-heavy<br>data as on random data — each duplicate still has to decide “less than<br>or greater than pivot” and lands in one of the two sides. But <strong>3-way<br>quicksort</strong> (Dutch flag partition) drops the duplicates into an “equal”<br>middle bucket in one pass, and the recursion skips over them entirely.<br>On all-equal input, that’s O(n) instead of O(n log n).</p>
+<p>This is the reason most modern sort implementations use some form of<br>3-way partition — they get linear time on highly skewed real-world data<br>almost for free.</p>
+<h3 id="Counting-sort-wins-only-when-it-wins"><a href="#Counting-sort-wins-only-when-it-wins" class="headerlink" title="Counting sort wins only when it wins"></a>Counting sort wins only when it wins</h3><p>Counting sort is O(n + k) where k is the value range. At n &#x3D; 100,000<br>and k &#x3D; 100, it’s <strong>three times</strong> faster than merge sort. At k &#x3D; 10,000<br>it’s slower. At k &#x3D; 1,000,000 it runs out of memory trying to allocate<br>a million-element bucket array. So it’s not a “better” algorithm — it’s<br>a <strong>different tool</strong> that’s useful under specific conditions (small,<br>known integer range).</p>
+<h2 id="The-part-I-thought-I-understood-but-didn’t"><a href="#The-part-I-thought-I-understood-but-didn’t" class="headerlink" title="The part I thought I understood but didn’t"></a>The part I thought I understood but didn’t</h2><p>I’d read “O(n log n) beats O(n²) for large n” a dozen times before<br>writing any of this. But reading it and watching bubble sort take<br>11 seconds on your own machine while merge sort finishes in a blink are<br>completely different experiences.</p>
+<p>There’s also a subtler thing: the constants matter. At n &#x3D; 10 or n &#x3D; 100,<br>bubble sort can actually beat merge sort because merge sort’s recursion<br>overhead dominates for tiny inputs. Real-world sort implementations<br>(CPython’s Timsort, Java’s dual-pivot quicksort) hybridize — they<br><em>switch to insertion sort</em> for small subarrays. That only makes sense<br>once you’ve measured the crossover point yourself.</p>
+<h2 id="What’s-next"><a href="#What’s-next" class="headerlink" title="What’s next"></a>What’s next</h2><p>I’m writing a separate post about the other half of this project: I<br>tried to invent my own pivot-selection strategy for quicksort, called<br>“median of 5”, and it ended up saving ~18% of comparisons on random<br>input. That one’s more fun — I’ll <a href="/2026/04/23/median-of-five-quicksort/">link it here</a><br>when it’s up.</p>
+<p>All the code for this post is at<br><a target="_blank" rel="noopener" href="https://github.com/jerryzhenyuliu/sorting-algorithms">github.com&#x2F;jerryzhenyuliu&#x2F;sorting-algorithms</a>.</p>
 
                 
               </div>
@@ -419,7 +475,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/notes/" class="category-chain-item">notes</a>
+  <a href="/categories/project-write-up/" class="category-chain-item">project write-up</a>
   
   
 
@@ -434,9 +490,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/meta/" class="print-no-link">#meta</a>
+        <a href="/tags/python/" class="print-no-link">#python</a>
       
-        <a href="/tags/introduction/" class="print-no-link">#introduction</a>
+        <a href="/tags/algorithms/" class="print-no-link">#algorithms</a>
+      
+        <a href="/tags/sorting/" class="print-no-link">#sorting</a>
       
     </div>
   
@@ -448,8 +506,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>https://jerryzhenyuliu.github.io/2026/04/22/hello-world/</div>
+      <div>Six sorting algorithms, and the O(n²) gap that hit harder than I expected</div>
+      <div>https://jerryzhenyuliu.github.io/2026/04/23/sorting-algorithms-big-o-gap/</div>
     </div>
     <div class="license-meta">
       
@@ -461,7 +519,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>April 22, 2026</div>
+          <div>April 23, 2026</div>
         </div>
       
       
@@ -493,15 +551,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/04/23/sorting-algorithms-big-o-gap/" title="Six sorting algorithms, and the O(n²) gap that hit harder than I expected">
+                      <a href="/2026/04/23/median-of-five-quicksort/" title="A median-of-5 pivot for quicksort — the result I&#39;m most proud of">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Six sorting algorithms, and the O(n²) gap that hit harder than I expected</span>
+                        <span class="hidden-mobile">A median-of-5 pivot for quicksort — the result I&#39;m most proud of</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2026/04/22/hello-world/" title="Hello World">
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
